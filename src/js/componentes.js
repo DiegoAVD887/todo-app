@@ -28,7 +28,18 @@ txtInput.addEventListener('keyup', (event) => {
 	if( (event.key === 'Enter' || event.keyCode === 13) && !(txtInput.value.trim() === '') ) {
 		const newTask = new Todo(txtInput.value);
 		txtInput.value = '';
-		crearTodoHtml(newTask);
 		todoList.nuevoTodo(newTask);
+		crearTodoHtml(newTask);
 	}
 });
+
+divTodoList.addEventListener('click', (event) => {
+	const nombreElemento = event.target.localName;
+	const todoElement    = event.target.parentElement.parentElement;
+	const todoId         = todoElement.getAttribute('data-id');
+
+	if(nombreElemento.includes('input')) {
+		todoList.marcarCompletado(todoId);
+		todoElement.classList.toggle('completed');
+	}
+})
