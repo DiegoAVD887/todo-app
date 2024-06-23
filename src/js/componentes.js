@@ -2,8 +2,10 @@ import {Todo, TodoList} from './classes';
 import {todoList} from '../index.js';
 
 // Referencias en el HTML
-const divTodoList = document.querySelector('.todo-list');
-const txtInput    = document.querySelector('.new-todo');
+const divTodoList       = document.querySelector('.todo-list')
+	, txtInput          = document.querySelector('.new-todo')
+	, todoCount         = document.querySelector('.todo-count')
+	, borrarCompletados = document.querySelector('.clear-completed');
 
 export const crearTodoHtml = (todo) => {
 	const htmlTodo = `
@@ -23,6 +25,11 @@ export const crearTodoHtml = (todo) => {
 	return(div.firstElementChild);
 }
 
+const actualizarListaPendientes = () => {
+	const listaPendientes = todoList.todos.filter(todo => !todo.completado);
+	todoCount.firstElementChild.innerText = listaPendientes.length;
+}
+
 // Eventos
 txtInput.addEventListener('keyup', (event) => {
 	if( (event.key === 'Enter' || event.keyCode === 13) && !(txtInput.value.trim() === '') ) {
@@ -31,6 +38,8 @@ txtInput.addEventListener('keyup', (event) => {
 		todoList.nuevoTodo(newTask);
 		crearTodoHtml(newTask);
 	}
+	
+	actualizarListaPendientes();
 });
 
 divTodoList.addEventListener('click', (event) => {
@@ -42,4 +51,22 @@ divTodoList.addEventListener('click', (event) => {
 		todoList.marcarCompletado(todoId);
 		todoElement.classList.toggle('completed');
 	}
-})
+
+	if(nombreElemento.includes('button')) {
+		todoList.eliminarTodo(todoId);
+		divTodoList.removeChild(todoElement);
+	}
+	
+	actualizarListaPendientes();
+});
+
+borrarCompletados.addEventListener('click', () => {
+	todoList.eliminarCompletados();
+	for(let i = divTodoList.children.length - 1; i >= 0; i--) {
+		const elemento = divTodoList.children[i];
+
+		if(elemento.classList.contains('completed')) {
+			divTodoList.removeChild(elemento);
+		}
+	}
+});

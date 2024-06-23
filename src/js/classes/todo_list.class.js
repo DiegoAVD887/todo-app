@@ -8,7 +8,8 @@ export class TodoList {
 	}
 
 	eliminarTodo(id) {
-
+		id /= 1;
+		this.todos = this.todos.filter(todo => todo.id != id);
 	}
 
 	marcarCompletado(id) {
@@ -22,6 +23,6 @@ export class TodoList {
 	}
 
 	eliminarCompletados() {
-		
+		this.todos = this.todos.filter(todo => !todo.completado);
 	}
 }
